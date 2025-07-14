@@ -1,0 +1,39 @@
+name: MacWhisper
+options:
+  bundleIdPrefix: com.example
+
+targets:
+  MacWhisper:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - MacWhisper/Model/
+      - MacWhisper/View/
+      - MacWhisper/ViewModel/
+      - MacWhisper/Service/
+      - MacWhisper/MacWhisperApp.swift
+      - MacWhisper/Whisper/whisper_wrapper.cpp
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGNING_REQUIRED: "NO"
+        DEVELOPMENT_TEAM: ""
+        PRODUCT_BUNDLE_IDENTIFIER: "com.example.MacWhisper"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SWIFT_OBJC_BRIDGING_HEADER: "MacWhisper/Bridging-Header.h"
+        HEADER_SEARCH_PATHS: "$(SRCROOT)/MacWhisper/Whisper/whisper.cpp/src $(SRCROOT)/MacWhisper/Whisper/whisper.cpp/include $(SRCROOT)/MacWhisper/Whisper/whisper.cpp/ggml/include"
+        LIBRARY_SEARCH_PATHS: "$(SRCROOT)/MacWhisper/Libs"
+        FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SDKROOT)/System/Library/Frameworks"
+        OTHER_LDFLAGS: "-lwhisper -lwhisper_wrapper -F$(SDKROOT)/System/Library/Frameworks -framework CoreAudioTypes"
+        GENERATE_INFOPLIST_FILE: YES
+        # Removed SDKROOT: macosx14.0
+      configs:
+        Debug:
+          SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+        Release:
+          SWIFT_OPTIMIZATION_LEVEL: "-Owholemodule"
+    dependencies:
+      - framework: Accelerate.framework
+      - framework: CoreMedia.framework
+      - sdk: libz.tbd
